@@ -1049,6 +1049,15 @@ if(USE_XPU)
   if(NOT _exitcode EQUAL 0)
     message(FATAL_ERROR "Fail to checkout ${TORCH_XPU_OPS_REPO_URL} to ${TORCH_XPU_OPS_COMMIT}")
   endif()
+  execute_process(
+    COMMAND curl -Ls https://github.com/intel/torch-xpu-ops/pull/1017.diff
+    OUTPUT_PIPE
+    COMMAND git apply -
+    WORKING_DIRECTORY ${TORCH_XPU_OPS_DIR}
+    RESULT_VARIABLE _exitcode)
+  if(NOT _exitcode EQUAL 0)
+    message(FATAL_ERROR "Fail to apply patch from PR#1017")
+  endif()
 
   set(TORCH_XPU_OPS_INCLUDE_DIRS
       ${TORCH_SRC_DIR}/csrc/api
